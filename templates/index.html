@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrimonio Cultural</title>
+    <style>
+        /* Estilos para la interfaz */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 40%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-container {
+            width: 55%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pieza {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .pieza img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .delete-button {
+            background-color: #f44336; /* Rojo */
+            margin-top: 10px;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f; /* Rojo más oscuro */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Gestión de Patrimonio Cultural</h1>
+</header>
+
+<div class="container">
+
+    <!-- agregar nueve peiza -->
+    <div class="form-container">
+        <h2>Agregar Nueva Pieza</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="text" name="nombre" placeholder="Nombre de la pieza" required><br>
+            <textarea name="descripcion" placeholder="Descripción de la pieza" required></textarea><br>
+            <input type="number" name="anio" placeholder="Año de creación" required><br>
+            <input type="text" name="tipo" placeholder="Tipo de pieza" required><br>
+            <input type="text" name="ubicacion" placeholder="Ubicación de la pieza" required><br>
+            <input type="file" name="imagen" accept="image/*"><br>
+            <button type="submit">Agregar Pieza</button>
+        </form>
+    </div>
+
+    <!-- Lista de piezas existentes -->
+    <div class="list-container">
+        <h2>Piezas Registradas</h2>
+        {% for pieza in piezas %}
+            <div class="pieza">
+                <h3>{{ pieza.nombre }}</h3>
+                <p>{{ pieza.descripcion }}</p>
+                <p>Año: {{ pieza.anio }}</p>
+                <p>Tipo: {{ pieza.tipo }}</p>
+                <p>Ubicación: {{ pieza.ubicacion }}</p>
+                {% if pieza.imagen %}
+                    <img src="{{ url_for('uploaded_file', filename=pieza.imagen) }}" alt="Imagen de la pieza">
+                {% endif %}
+                <!-- Botón de eliminar -->
+                <form action="{{ url_for('eliminar_pieza', id=pieza.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="delete-button">Eliminar</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>
