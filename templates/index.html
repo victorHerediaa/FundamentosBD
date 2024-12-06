@@ -85,6 +85,27 @@
         .delete-button:hover {
             background-color: #d32f2f; /* Rojo más oscuro */
         }
+
+        .messages ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -95,7 +116,7 @@
 
 <div class="container">
 
-    <!-- agregar nueve peiza -->
+    <!-- Formulario para agregar nueva pieza -->
     <div class="form-container">
         <h2>Agregar Nueva Pieza</h2>
         <form method="POST" enctype="multipart/form-data">
@@ -112,6 +133,21 @@
     <!-- Lista de piezas existentes -->
     <div class="list-container">
         <h2>Piezas Registradas</h2>
+
+        <!-- Mostrar mensajes de éxito/error -->
+        <div class="messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Mostrar piezas registradas -->
         {% for pieza in piezas %}
             <div class="pieza">
                 <h3>{{ pieza.nombre }}</h3>
@@ -119,9 +155,11 @@
                 <p>Año: {{ pieza.anio }}</p>
                 <p>Tipo: {{ pieza.tipo }}</p>
                 <p>Ubicación: {{ pieza.ubicacion }}</p>
+
                 {% if pieza.imagen %}
                     <img src="{{ url_for('uploaded_file', filename=pieza.imagen) }}" alt="Imagen de la pieza">
                 {% endif %}
+
                 <!-- Botón de eliminar -->
                 <form action="{{ url_for('eliminar_pieza', id=pieza.id) }}" method="POST" style="display:inline;">
                     <button type="submit" class="delete-button">Eliminar</button>
